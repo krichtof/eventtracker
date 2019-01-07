@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    command: /bin/bash -lc "bundle exec rails s -p 3000 -b 0.0.0.0"
+    working_dir: /app
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: eventtracker
+      POSTGRES_USER: eventtracker
+      POSTGRES_PASSWORD: eventtracker
+      RUBYOPT: -KU
+      RACK_ENV: development
+      SESSION_SECRET: notreallysecret
+  test:
+    build: .
+    command: /bin/bash -lc "bundle exec rails test"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      POSTGRES_HOST: postgres_test
+      POSTGRES_DB: eventtracker
+      POSTGRES_USER: eventtracker
+      POSTGRES_PASSWORD: eventtracker
+      RUBYOPT: -KU
+      RACK_ENV: test
+      SESSION_SECRET: notreallysecret
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: eventtracker
+      POSTGRES_USER: eventtracker
+      POSTGRES_PASSWORD: eventtracker
+  postgres_test:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: eventtracker
+      POSTGRES_USER: eventtracker
+      POSTGRES_PASSWORD: eventtracker
